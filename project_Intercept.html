@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Rendezvous Planning from Sparse Observations</title> 
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		<style>
+			.container {
+				display: flex;
+			}
+			.video-container {
+				margin: 2em 0;
+				text-align: center;
+			}
+			video {
+				max-width: 100%;
+				height: auto;
+				border-radius: 8px;
+				box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<header id="header">
+				<a href="index.html" class="title">Project Description</a>
+				<nav>
+					<ul>
+						<li><a href="index.html">Home</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<div id="wrapper">
+
+				<section id="main" class="wrapper">
+						<div class="inner">
+							<center>
+								<h1>Rendezvous Planning from Sparse Observations of Optimally Controlled Targets</h1> 
+							</center>
+							<hr>
+
+							<div class="video-container">
+								<video controls autoplay loop muted>
+									<source src="images/project_Intercept/animation.mp4" type="video/mp4">
+									Your browser does not support the video tag.
+								</video>
+								<p><i>Demonstration: Possible target trajectories and computed rendezvous paths for the seeking agents.</i></p>
+							</div>
+
+							<p>Predicting the future trajectories of intelligent, goal-oriented agents is a significant challenge when observations are intermittent and noisy. We develop a probabilistic framework for rendezvous planning that identifies optimal spatiotemporal coordinates to intercept a fast-moving target using a set of significantly slower seeking agents. By leveraging the underlying optimality of the target's decision-making, our method outperforms traditional reactive strategies in velocity-disadvantaged regimes.</p>
+							
+							<center>
+								<img src="images/project_Intercept/dubins_track.png" width="1000" alt="Dubins car rendezvous scenario">
+							</center>
+						
+							<h2>The "Information Gap" in Tracking</h2> 
+							<p>Real-world tracking often suffers from an "information gap" caused by sparse data and uncertainty regarding a target's kinematics. Traditional methods like Kalman filtering often fail here because they do not account for the reachability properties or the goal-oriented behavior of the target.</p>
+							
+							<div class="container">
+								<div>
+									<p>Our approach models the target as following an approximately optimal path toward an unknown goal. We represent this uncertainty through a <strong>Gaussian Process (GP)</strong>, using a <strong>Maximum A Posteriori (MAP)</strong> trajectory as a prior to provide a robust stochastic model for prediction.</p>
+								</div>
+							</div>
+
+							<h2>Core Methodology</h2>
+							<p>The framework operates through a sequential decision structure that ensures each attempt is informed by a consistent representation of the remaining search space.</p>
+							<ol>
+								<li><strong>Stochastic Trajectory Estimation:</strong> We compute a MAP trajectory consistent with assumed ODE dynamics and use Gaussian Process Regression (GPR) for uncertainty quantification and bias correction.</li>
+								<li><strong>Greedy Sequential Planning:</strong> Rendezvous points are selected by minimizing the conditional failure probability under the current belief.</li>
+								<li><strong>Bayesian Belief Updates:</strong> After each unsuccessful attempt, the distribution is updated by conditioning on the failure, refining both parameter weights and trajectory distributions.</li>
+							</ol>
+
+							<center>
+								<img src="images/project_Intercept/alg.png" width="800" alt="Proposed Algorithm">
+							</center>
+
+							<h2>Reachability and Operational Constraints</h2>
+							<p>To ensure feasibility, the algorithm only considers rendezvous points within the <strong>reachable region (R)</strong> of the seeking agents. This allows us to enforce complex constraints that reactive laws cannot handle, such as specific contact angles (e.g., side-on approaches) even when the seeker is only 30% as fast as the target.</p>
+
+							<center>
+								<div class="row gtr-uniform">
+									<div class="col-6 col-12-xsmall">
+										<span class="image fit">
+											<img src="images/project_Intercept/reachable_directed.png" alt="Reachable Directed">
+										</span>
+										<p style="text-align: center; font-size: 0.9em; margin-top: -1em;">
+											<i>Directed: Reachable region with constrained initial facing direction.</i>
+										</p>
+									</div>
+
+									<div class="col-6 col-12-xsmall">
+										<span class="image fit">
+											<img src="images/project_Intercept/reachable_undirected.png" alt="Reachable Undirected">
+										</span>
+										<p style="text-align: center; font-size: 0.9em; margin-top: -1em;">
+											<i>Undirected: Reachable region with unconstrained initial facing direction.</i>
+										</p>
+									</div>
+								</div>
+							</center>
+							</center>
+
+							<h2>Key Advantages & Technical Versatility</h2>
+							<p>This framework is the first of its kind capable of planning successful rendezvous in <strong>velocity-disadvantaged regimes</strong>. While traditional reactive laws typically require the seeking agent to be faster than the target, our method enables successful interception even when the seeker is significantly slower (e.g., 30% of the target's speed) by anticipating the target's goal-oriented behavior.</p>
+
+							<p>Beyond speed differences, the algorithm is built to handle the complex operational constraints of real-world missions. Because we optimize over the target's entire predicted trajectory distribution, we can strictly enforce:</p>
+							<ul>
+								<li><strong>Initial Heading:</strong> Accounting for the seeker's starting orientation.</li>
+								<li><strong>Rendezvous Angle:</strong> Ensuring the seeker approaches from a specific side (e.g., for mid-air refueling or docking).</li>
+								<li><strong>Dynamic Obstacles:</strong> Navigating around hazards while maintaining the interception path.</li>
+								<li><strong>Curvature Constraints:</strong> Respecting the physical turning radius limits of the agents (Dubins car dynamics).</li>
+							</ul>
+
+
+							<h2>Applications</h2>
+							<p>This systematic framework is designed for high-stakes autonomous applications:</p>
+							<ul>
+								<li>Unmanned Aerial Vehicle (UAV) mid-air refueling.</li>
+								<li>Spacecraft servicing and debris removal.</li>
+								<li>Search and rescue missions.</li>
+								<li>Missile defense and maritime autonomous surface vessel operations.</li>
+							</ul>
+							
+						</div>
+					</section>
+
+			</div>
+
+		<footer id="footer" class="wrapper alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

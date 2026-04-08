@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Fast End-to-End Generation of Belief Space Paths</title> 
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		<style>
+			.container {
+				display: flex;
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<header id="header">
+				<a href="index.html" class="title">Project Description</a>
+				<nav>
+					<ul>
+						<li><a href="index.html">Home</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<div id="wrapper">
+
+				<section id="main" class="wrapper">
+						<div class="inner">
+							<center>
+							<h1>Fast End-to-End Generation of Belief Space Paths for Minimum Sensing Navigation</h1> 
+							</center>
+							<hr>
+							<p>Motion planning in Gaussian belief space is crucial for robotics in uncertain environments but often suffers from high computational costs. We propose a deep learning-based approach that leverages a U-Net architecture to predict optimal path candidates directly from a problem description image. By bypasssing traditional sampling-based planners during inference, our method significantly reduces computation time while maintaining path quality comparable to baseline algorithms like RI-RRT*.</p>
+							
+							<center>
+								<img src="images/project_BeliefSpace/rirrt.png" width="1000" height="400" alt="RI-RRT* algorithm applied to Problem 1 with different weight factors.">
+							</center>
+						
+							<h2>Problem Statement</h2> 
+							<p>The study focuses on Gaussian belief space planning for minimum sensing navigation. We consider an agent subject to Gaussian disturbances, where the belief state is defined as \( b := \{x, P\} \), with \( x \) as the state and \( P \) as the covariance matrix.</p>
+							
+							<div class="container">
+								<div>
+									<p>The objective is to find an optimal path \( \gamma^* \) that minimizes a cost function \( c(\gamma) \) combining path length and information gain:</p>
+									<p>\[ c(\gamma) = (\text{Path length of } \gamma) + \alpha (\text{Information gain needed to follow } \gamma) \]</p>
+									<p>The path must be collision-free with a prescribed confidence level \( \chi^2 \) against a set of obstacles.</p>
+								</div>
+							</div>
+
+							<h2>The Proposed Approach</h2>
+							<p>Our framework consists of three main steps: dataset collection, path prediction, and path reconstruction.</p>
+							<ol>
+								<li><strong>Dataset Collection:</strong> We use the RI-RRT* planner to generate a large dataset of input images (encoding start, goal, and obstacles) and output images (the ground truth shortest paths).</li>
+								<li><strong>Path Prediction:</strong> A U-Net architecture learns to translate the multi-channel input image into a single-channel image representing the predicted optimal path distribution.</li>
+								<li><strong>Path Reconstruction:</strong> We interpret the network's output as a probability density function to draw sample points and reconstruct a sequence of configurations the robot can execute.</li>
+							</ol>
+
+							<center>
+								<img src="images/project_BeliefSpace/encoding.png" width="800" height="400" alt="Encoding scheme and computed path">
+							</center>
+
+							<h2>U-Net Architecture</h2>
+							<p>For the path prediction task, we employ the U-Net architecture. The model features an encoder-decoder structure with skip connections that allow the network to capture both low-level and high-level features while preventing the loss of crucial reconstruction data.</p>
+
+							<center>
+								<img src="images/project_BeliefSpace/unet.png" width="800" height="500" alt="U-Net Architecture">
+							</center>
+
+							<h2>Visualizing the Predicted Paths</h2>
+							<p>The following figure showcases the model's ability to accurately predict the distribution of optimal paths. The U-Net output is a probability density that closely matches the ground truth solutions computed by traditional planners, demonstrating that it captures the complex geometric constraints of the environment.</p>
+
+							<center>
+								<img src="images/project_BeliefSpace/paths.png" width="800" height="600" alt="U-Net Prediction vs RI-RRT* Solution">
+							</center>
+
+							<h2>Results and Efficiency</h2>
+							<p>Numerical experiments demonstrate that the U-Net prediction is highly adaptable, successfully re-routing paths even when encountering obstacle shapes not present in the training set. Quantitatively, the reconstructed trajectories produce path lengths comparable to those from RI-RRT*.</p>
+							
+							<center>
+								<img src="images/project_BeliefSpace/path_length.jpg" width="600" height="343" alt="Path length distribution comparison">
+							</center>
+							
+							<p>Crucially, our approach is approximately 12 to 15 times faster than traditional methods. With further optimizations in graph construction and collision checking, we anticipate achieving at least a 50x speed improvement.</p>
+							
+						</div>
+					</section>
+
+			</div>
+
+		<footer id="footer" class="wrapper alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

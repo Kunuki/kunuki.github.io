@@ -46,7 +46,7 @@
 							<div class="aligned">
 								<div style="width:50%;">
 									<h1>Lukas Taus</h1>
-									<p>PhD Student in the CSEM program in the Oden Institutate for Computational Engineering & Sciences at the University of Texas at Austin. My research interests include machine learning, numerical analysis and computer vision.</p>
+									<p>PhD Candidate in the CSEM program in the Oden Institutate for Computational Engineering & Sciences at the University of Texas at Austin. My research interests include machine learning, numerical analysis, computer vision, optimal decision making, and optimization.</p>
 								</div>
 								<!-- <img src="images/pic01.jpg" alt="Lukas Taus" width="350px">	  -->
 							</div>
@@ -72,7 +72,7 @@
 									</span></h3>
 									<p style="font-size: 13px">August 2021 - Current</p>
 									<p>PhD Student in Computation Science, Engeneering and Mathematics</p>
-									<p><b>GPA:</b> 3.945</p>
+									<p><b>GPA:</b> 3.9492</p>
 									<p><b>Research interests:</b> Scientific Machine Learning from a numerical analysis perspective with applications in computer vision and optimal control.</p>
 									
 									<details>
@@ -175,15 +175,46 @@
 				<!-- Two -->
 					<section id="two" class="wrapper style1 fade-upwrapper style2 spotlights">
 						<section>
-							<a href="https://tsairesearch.github.io/projects/sensor" class="image"><img src="images/sensor_thumbnail_V2.jpg" alt="" data-position="center center" width="10px"/></a>
+							<a href="project_Intercept.html" class="image"><img src="images/project_Intercept/thumbnail.png" alt="" data-position="center center" width="10px"/></a>
+							<div class="content">
+								<div class="inner">
+									<h2>Rendezvous Planning from Sparse Observations of Optimally Controlled Targets</h2>
+									<p>We present a probabilistic framework for rendezvous planning with fast targets under uncertainty. We estimate trajectories using kernel-based MAP estimation and Gaussian processes, then optimize coordinates via a sequential greedy algorithm that maintains a statistically consistent belief space. Crucially, this approach enables successful coordination with targets significantly faster than the seeking agents, a task infeasible with existing methods.</p>
+									<ul class="actions">
+										<li><a href="project_Intercept.html" class="button">Learn More</a></li>
+										<li><a href="https://arxiv.org/abs/2604.01428" class="button">Publication</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+					</section>
+
+					<section id="two" class="wrapper style1 fade-upwrapper style2 spotlights">
+						<section>
+							<a href="project_MultiCov.html" class="image"><img src="images/project_MultiCov/thumbnail.png" alt="" data-position="center center" width="10px"/></a>
 							<div class="content">
 								<div class="inner">
 									<h2>Optimizing Sensor Network Design for Multiple Coverage</h2>
 									<p>We introduce a new objective function for the greedy algorithm to design efficient and robust sensor networks and derive theoretical bounds on the network's optimality. We further introduce a Deep Learning model to accelerate the algorithm for near real-time computations. Correspondingly, we show that understanding the geometric properties of the training data set provides important insights into the performance and training.</p>
 									<ul class="actions">
 										<li><a href="project_MultiCov.html" class="button">Learn More</a></li>
-										<li><a href="#" class="button">Publication</a></li>
-										<li><a href="#" class="button">GitHub</a></li>
+										<li><a href="https://arxiv.org/abs/2405.09096" class="button">Publication</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+					</section>
+
+					<section id="two" class="wrapper style1 fade-upwrapper style2 spotlights">
+						<section>
+							<a href="project_BeliefSpace.html" class="image"><img src="images/project_BeliefSpace/thumbnail.png" alt="" data-position="center center" width="10px"/></a>
+							<div class="content">
+								<div class="inner">
+									<h2>Fast End-to-End Generation of Belief Space Paths for Minimum Sensing Navigation</h2>
+									<p>We propose a deep learning-based motion planner to accelerate navigation in high-dimensional Gaussian belief spaces. By leveraging a U-Net architecture, we learn to predict optimal path candidates directly from image-encoded problem descriptions, including start/goal states and obstacles. This approach replaces computationally expensive sampling with a fast inference step that reconstructs paths from learned distributions. Our method significantly reduces computation time compared to traditional sampling-based baselines while maintaining high solution quality.</p>
+									<ul class="actions">
+										<li><a href="project_BeliefSpace.html" class="button">Learn More</a></li>
+										<li><a href="https://arxiv.org/abs/2409.12902" class="button">Publication</a></li>
 									</ul>
 								</div>
 							</div>
@@ -195,17 +226,95 @@
 						<div class="inner">
 							<h2>Publications</h2>
 							<h3>Published Papers</h3>
+
 							<div class="features">
 								<section>
-								<h3 style='text-align: left'>Efficient and robust Sensor Placement in Complex Environments</h3>
-								<p style="font-size: 13px">September 2023</p>
-								<p>Preprint</p>
-								<p>We address the problem of efficient and unobstructed surveillance or communication in complex environments. On one hand, one wishes to use a minimal number of sensors to cover the environment. On the other hand, it is often important to consider solutions that are robust against sensor failure or adversarial attacks. This paper addresses these challenges of designing minimal sensor sets that achieve multi-coverage constraints -- every point in the environment is covered by a prescribed number of sensors. We propose a greedy algorithm to achieve the objective. Further, we explore deep learning techniques to accelerate the evaluation of the objective function formulated in the greedy algorithm. The training of the neural network reveals that the geometric properties of the data significantly impact the network's performance, particularly at the end stage. By taking into account these properties, we discuss the differences in using greedy and ϵ-greedy algorithms to generate data and their impact on the robustness of the network.</p>
-								<ul class="actions">
-									<li><a href="https://arxiv.org/abs/2309.08545" class="button">Learn More</a></li>
-								</ul>
+									<h3 style="text-align: left">Rendezvous Planning from Sparse Observations of Optimally Controlled Targets</h3>
+									
+									<p style="font-size: 14px; margin-bottom: 0.5em;">
+										<strong>Authors:</strong> Thomas A. Scott, Lukas Taus, Yen-Hsi Richard Tsai, Tan Bui-Thanh, Justin G.R. Delva
+									</p>
+									<p style="font-size: 13px; color: #888; margin-bottom: 1.5em;">
+										<i>Preprint &bull; April 2026</i>
+									</p>
+
+									<p>
+									We develop a probabilistic framework for \emph{rendezvous planning}: given sparse, noisy observations of a fast-moving target, plan rendezvous spatiotemporal coordinates for a set of significantly slower seeking agents. The unknown target trajectory is estimated under uncertain dynamics using a filtering approach that combines a kernel-based maximum a posteriori estimation with Gaussian process correction, producing a mixture over trajectory hypotheses. This estimate is used to select spatiotemporal rendezvous points that maximize the probability of successful rendezvous. Points are chosen sequentially by greedily minimizing failure probability in the current belief space, which is updated after each step by conditioning on unsuccessful rendezvous attempts. We show that the failure-conditioned update correctly captures the posterior belief for subsequent decisions, ensuring that each step in the greedy sequence is informed by a statistically consistent representation of the remaining search space, and derive the corresponding Bayesian updates incorporating temporal correlations intrinsic to the trajectory model. This result provides a systematic framework for planning under uncertainty in applications of autonomous rendezvous such as unmanned aerial vehicle refueling, spacecraft servicing, autonomous surface vessel operations, search and rescue missions, and missile defense. In each, the motion of the target entity can be modeled using a system of differential equations undergoing optimal control for a chosen objective, in our example case Hamilton--Jacobi--Bellman solutions for minimum arrival time of a Dubins car with uncertain turning radius and destination. 
+									</p>
+
+									<ul class="actions">
+										<li><a href="https://arxiv.org/abs/2604.01428" class="button">View Paper</a></li>
+										<li><a href="project_Intercept.html" class="button primary">Project Page</a></li>
+									</ul>
 								</section>
 							</div>
+
+							<div class="features">
+								<section>
+									<h3 style="text-align: left">Fast End-to-End Generation of Belief Space Paths for Minimum Sensing Navigation</h3>
+									
+									<p style="font-size: 14px; margin-bottom: 0.5em;">
+										<strong>Authors:</strong> Lukas Taus, Vrushabh Zinage, Takashi Tanaka, Richard Tsai
+									</p>
+									<p style="font-size: 13px; color: #888; margin-bottom: 1.5em;">
+										<i>Preprint &bull; September 2024</i>
+									</p>
+
+									<p>
+									We revisit the problem of motion planning in the Gaussian belief space. Motivated by the fact that most existing sampling-based planners suffer from high computational costs due to the high-dimensional nature of the problem, we propose an approach that leverages a deep learning model to predict optimal path candidates directly from the problem description. Our proposed approach consists of three steps. First, we prepare a training dataset comprising a large number of input-output pairs: the input image encodes the problem to be solved (e.g., start states, goal states, and obstacle locations), whereas the output image encodes the solution (i.e., the ground truth of the shortest path). Any existing planner can be used to generate this training dataset. Next, we leverage the U-Net architecture to learn the dependencies between the input and output data. Finally, a trained U-Net model is applied to a new problem encoded as an input image. From the U-Net's output image, which is interpreted as a distribution of paths,an optimal path candidate is reconstructed. The proposed method significantly reduces computation time compared to the sampling-based baseline algorithm. 
+									</p>
+
+									<ul class="actions">
+										<li><a href="https://arxiv.org/abs/2409.12902" class="button">View Paper</a></li>
+										<li><a href="project_BeliefSpace.html" class="button primary">Project Page</a></li>
+									</ul>
+								</section>
+							</div>
+
+							<div class="features">
+								<section>
+									<h3 style="text-align: left">Optimizing Sensor Network Design for Multiple Coverage</h3>
+									
+									<p style="font-size: 14px; margin-bottom: 0.5em;">
+										<strong>Authors:</strong> Lukas Taus, Yen-Hsi Richard Tsai
+									</p>
+									<p style="font-size: 13px; color: #888; margin-bottom: 1.5em;">
+										<i>Preprint &bull; May 2024</i>
+									</p>
+
+									<p>
+									Sensor placement optimization methods have been studied extensively. They can be applied to a wide range of applications, including surveillance of known environments, optimal locations for 5G towers, and placement of missile defense systems. However, few works explore the robustness and efficiency of the resulting sensor network concerning sensor failure or adversarial attacks. This paper addresses this issue by optimizing for the least number of sensors to achieve multiple coverage of non-simply connected domains by a prescribed number of sensors. We introduce a new objective function for the greedy (next-best-view) algorithm to design efficient and robust sensor networks and derive theoretical bounds on the network's optimality. We further introduce a Deep Learning model to accelerate the algorithm for near real-time computations. The Deep Learning model requires the generation of training examples. Correspondingly, we show that understanding the geometric properties of the training data set provides important insights into the performance and training process of deep learning techniques. Finally, we demonstrate that a simple parallel version of the greedy approach using a simpler objective can be highly competitive. 
+									</p>
+
+									<ul class="actions">
+										<li><a href="https://arxiv.org/abs/2405.09096" class="button">View Paper</a></li>
+										<li><a href="project_MultiCov.html" class="button primary">Project Page</a></li>
+									</ul>
+								</section>
+							</div>
+
+							<div class="features">
+								<section>
+									<h3 style="text-align: left">Efficient and Robust Sensor Placement in Complex Environments</h3>
+									
+									<p style="font-size: 14px; margin-bottom: 0.5em;">
+										<strong>Authors:</strong> Lukas Taus, Yen-Hsi Richard Tsai
+									</p>
+									<p style="font-size: 13px; color: #888; margin-bottom: 1.5em;">
+										<i>Preprint &bull; September 2023</i>
+									</p>
+
+									<p>
+									We address the problem of efficient and unobstructed surveillance or communication in complex environments. On one hand, one wishes to use a minimal number of sensors to cover the environment. On the other hand, it is often important to consider solutions that are robust against sensor failure or adversarial attacks. This paper addresses these challenges of designing minimal sensor sets that achieve multi-coverage constraints -- every point in the environment is covered by a prescribed number of sensors. We propose a greedy algorithm to achieve the objective. Further, we explore deep learning techniques to accelerate the evaluation of the objective function formulated in the greedy algorithm. The training of the neural network reveals that the geometric properties of the data significantly impact the network's performance, particularly at the end stage. By taking into account these properties, we discuss the differences in using greedy and ϵ-greedy algorithms to generate data and their impact on the robustness of the network. 
+									</p>
+
+									<ul class="actions">
+										<li><a href="https://arxiv.org/abs/2309.08545" class="button">View Paper</a></li>
+										<li><a href="project_MultiCov.html" class="button primary">Project Page</a></li>
+									</ul>
+								</section>
+							</div>
+
 							<h3>Presentations</h3>
 							<div class="features">
 								<section>
