@@ -1,0 +1,505 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Optimal 6G Wireless Transmitter Placement in Realistic Urban Environments</title> 
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		<style>
+			.video-container { margin: 2em 0; text-align: center; }
+			video { max-width: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+			.algorithm-block {
+				background: #1d1d1d; border: 1px solid #444; padding: 1.5em;
+				font-family: "Courier New", Courier, monospace; margin: 2em 0; border-left: 4px solid #a074f0;
+			}
+			.algo-title { font-weight: bold; border-bottom: 1px solid #444; margin-bottom: 10px; }
+			.row-custom { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 2em; }
+			.text-block { flex: 1; }
+			.img-block { flex: 1; text-align: center; }
+			@media screen and (max-width: 736px) { .row-custom { flex-direction: column; } }
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<header id="header">
+			<a href="index.html" class="title">Project Description</a>
+			<nav><ul><li><a href="index.html">Home</a></li></ul></nav>
+		</header>
+
+		<div id="wrapper">
+			<section id="main" class="wrapper">
+				<div class="inner">
+					<center><h1>Optimal Transmitter Placement in Realistic Urban Environments for 6G deployment</h1></center>
+					<hr>
+
+					<center>
+						<img src="images/project_Communication/sf_map.png" class="image fit" style="max-width: 900px; border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.35); margin-bottom: 0.5em;" alt="High-fidelity 3D model of San Francisco used for ray-tracing simulations">
+						<p style="color: rgba(0,0,0,0.5); font-size: 13px; margin-top: 0;"><i>High-fidelity 3D model of San Francisco used for ray-tracing simulations.</i></p>
+					</center>
+
+					<div style="background: rgba(94, 66, 166, 0.15); border: 1px solid rgba(94, 66, 166, 0.4); border-left: 4px solid #b74e91; padding: 1.2em 1.5em; margin: 1.5em 0; border-radius: 4px; color: rgba(255,255,255,0.9);">
+						<h3 style="margin-top: 0;">Overview</h3>
+						<p>Imagine you are a telecom engineer tasked with placing a handful of wireless towers across a dense city like San Francisco. Where should they go? Place them poorly and whole neighborhoods lose signal; place them naively and towers drown each other out with interference. This project answers that question with mathematics.</p>
+						<p>We develop a rigorous framework that treats the tower placement problem as a mathematical optimization. Using <strong>physics-accurate ray tracing</strong>, we simulate exactly how radio signals bounce off real buildings, diffract over rooftops, and scatter through glass and concrete. On top of this realistic propagation model, we prove that our objective has a special mathematical property called <strong>submodularity</strong> — a diminishing-returns structure that guarantees our greedy placement algorithm (IA-SPA) always finds a solution within a provable factor of optimal.</p>
+						<p style="margin-bottom: 0;">Tested against the real-world tower deployments of AT&amp;T and T-Mobile in San Francisco, IA-SPA achieves up to <strong>70% higher mean data rates</strong> and slightly improved interference levels (<strong>2% lower interference</strong>) using the same number of towers.</p>
+					</div>
+
+					<!-- <div class="video-container">
+						<video controls autoplay loop muted>
+							<source src="videos/transmitter_placement.mp4" type="video/mp4">
+						</video>
+						<p><i>Visualization of the optimization process within a high-fidelity 3D urban model.</i></p>
+					</div> -->
+
+					<div class="row-custom">
+						<div class="text-block">
+							<h2>1. High-Fidelity Signal Propagation</h2>
+							<p>Standard placement heuristics often rely on simplified "disk" models. Our method utilizes <strong>Sionna RT</strong> to perform site-specific ray tracing. This accounts for:
+							<ul>
+								<li>Diffuse scattering and specular reflections from building facades.</li>
+								<li>Material-specific attenuation (e.g., concrete vs. glass).</li>
+								<li>Complex 3D diffraction over rooftops (Knife-edge diffraction).</li>
+							</ul></p>
+						</div>
+						<div class="img-block">
+							<img src="images/project_Communication/single_sensor.jpeg" width="450" alt="Ray Tracing Example">
+						</div>
+					</div>
+
+					<h2>2. The Objective Functional \(S(T)\)</h2>
+
+                    <p>
+                    We consider the problem of optimally placing a set of transmitters
+                    \(T = \{t_1, \dots, t_n\} \subset \Omega\) in a physical environment
+                    \(\Omega \subseteq \mathbb{R}^n\), where signal propagation is governed by a spatially varying medium \(\mu(x)\).
+                    Each location \(y \in \Omega\) receives signal contributions from all transmitters through a propagation model \(P(y,x)\).
+                    </p>
+
+                    <p>
+                    A natural way to model wireless performance is through the Signal-to-Interference-and-Noise Ratio (SINR), where each user connects to the strongest transmitter while treating all others as interference. However, this leads to a highly non-linear coupling between transmitters:
+                    </p>
+
+                    <p style="text-align:center;">
+                    \[
+                    \text{SINR}(y, T) =
+                    \frac{\max_{t \in T} P(y, t)}
+                    {\sum_{t \in T} P(y, t) - \max_{t \in T} P(y, t) + \sigma^2}
+                    \]
+                    </p>
+
+                    <p>
+                    While physically accurate, this formulation induces a <strong>non-convex optimization landscape</strong> with many local optima due to the fractional structure and the max–sum coupling between transmitters. As a result, direct optimization of SINR-based objectives is computationally intractable at scale and lacks global optimality guarantees.
+                    </p>
+
+                    <p>
+                    To overcome this challenge, we introduce a family of <strong>aggregated surrogate measures</strong> for network quality:
+                    \(\mathcal{P}_{\text{MAX}}(y,T)\) and \(\mathcal{P}_{\text{SUM}}(y,T)\).
+                    These proxies decouple interference effects from the optimization structure while preserving the spatial behavior of signal accumulation.
+                    </p>
+
+                    <p>
+                    We then define a spatially aggregated objective functional over the environment:
+                    </p>
+
+                    <p style="text-align:center;">
+                    \[
+                    \mathcal{S}(T) = \mathbb{E}_{Y \sim f}\left[\bar{W}(\mathcal{P}(Y, T))\right]
+                    \]
+                    </p>
+
+                    <p>
+                    where \(f(y)\) is a spatial density encoding region importance and
+                    \(\bar{W}(\kappa) = \int_0^\kappa w(s)\,ds\) is the anti-derivative of a monotone utility function \(w\).
+                    This formulation plays a central role in our framework: it transforms the original interference-coupled SINR objective into a structured functional that is significantly more amenable to optimization.
+                    </p>
+
+                    <p>
+                    We formulate the transmitter placement problem as a constrained combinatorial optimization over the objective functional \(\mathcal{S}(T)\). Depending on the deployment setting, we consider two equivalent formulations. In the first, we seek the smallest number of transmitters required to achieve a target network quality:
+                    </p>
+
+                    <p style="text-align:center;">
+                    \[
+                    \min_{T \subseteq \Omega} |T| \quad \text{s.t.} \quad \mathcal{S}(T) \geq \beta.
+                    \]
+                    </p>
+
+                    <p>
+                    In the second formulation, we assume a fixed budget on the number of available transmitters and instead maximize achieved network quality:
+                    </p>
+
+                    <p style="text-align:center;">
+                    \[
+                    \max_{T \subseteq \Omega} \mathcal{S}(T) \quad \text{s.t.} \quad |T| \leq \beta.
+                    \]
+                    </p>
+
+                    <p>
+                    These two problems are dual perspectives of the same underlying trade-off between deployment cost and achieved network performance.
+                    </p>
+
+                    <p>
+                    A key theoretical contribution of this work is that, under mild assumptions on concavity of \(\bar{W}\), the continuous relaxation of this problem becomes a <strong>convex optimization problem</strong>. Intuitively, the concavity of \(\bar{W}\) smooths the diminishing marginal utility of signal accumulation, while preserving the essential spatial structure of wireless propagation. This yields a <strong>unique globally optimal solution</strong> in the continuous domain, which can then be discretized to guide transmitter placement.
+                    </p>
+
+                    <p>
+                    Furthermore, we show that \(\mathcal{S}(T)\) is <strong>monotone submodular</strong>. This implies a natural diminishing returns property: the marginal gain of adding a new transmitter decreases as the existing set \(T\) grows. This structure enables efficient greedy optimization algorithms with a provable approximation guarantee of at least \((1 - 1/e)\), providing both scalability and strong theoretical performance bounds.
+                    </p>
+					<h2>3. IA-SPA: Interference-Aware Submodular Placement</h2>
+					<p>Placement isn't just about coverage; it's about managing interference. IA-SPA (Algorithm 1) specifically targets areas where the Signal-to-Interference-plus-Noise Ratio (SINR) is lowest, ensuring robust "edge-of-cell" performance.</p>
+
+					<div class="algorithm-block">
+						<div class="algo-title">Algorithm 1: IA-SPA</div>
+						<div class="algo-step"><strong>Input:</strong> Initial Deployment set \(T_0\), Deployment Budget or Minimal Coverage Requirement</div>
+						<div class="algo-step">1: Let \(T = T_0\) (or \(T = \emptyset\) if no initial deployment given)</div>
+						<div class="algo-step">2: <strong>While</strong> remaining Budget or Coverage requirement not met <strong>do</strong></div>
+						<div class="algo-indent">
+							3: Compute \(\mathcal{G}(x \vert T) = S(T \cup \{x\}) - S(T)\) for all \(x \in \mathcal{V}\).<br>
+							4: Let \(\Omega_{\epsilon} = \{y \in \Omega \mid \mathcal{G}(y \vert T) \geq (1-\epsilon)\max_{z \in \Omega} \mathcal{G}(z \vert T)\}\).<br>
+							5: Choose \(x^* \in \Omega_{\epsilon}\) uniformly at random.<br>
+							6: \(T.\text{append}(x^*)\)
+						</div>
+						<div class="algo-step">7: <strong>End While</strong></div>
+						<div class="algo-step">8: <strong>Return</strong> optimal configuration \(T\).</div>
+					</div>
+
+                    <h2>4. Case Study: San Francisco</h2>
+                    <p>To establish a realistic baseline, we utilized building footprint data and existing tower locations for major carriers (AT&T, and T-Mobile) sourced from <a href="https://data.sfgov.org/Geographic-Locations-and-Boundaries/Existing-Commercial-Wireless-Telecommunication-Ser/aa26-h926/about_data">open-source network datasets</a>. This allows us to compare our <b>IA-SPA</b> optimized placement directly against real-world engineering deployments in a dense 3D environment.</p>
+
+                    <center>
+                        <img src="images/project_Communication/sf_map.png" class="image fit" style="max-width: 800px;" alt="3D Map of San Francisco">
+                        <p><i>High-fidelity 3D model of San Francisco used for ray-tracing simulations.</i></p>
+                    </center>
+
+                    <h3>Quantitative Comparison against Real-World Baselines</h3>
+                    <p>The following table summarizes the performance of IA-SPA compared to the average of existing carrier deployments in the same geographical area.</p>
+
+                    <div class="table-wrapper">
+                        <table style="border-collapse: collapse; width: 100%; font-size: 14px;">
+                        <thead>
+                            <tr>
+                            <th></th>
+                            <th colspan="3" style="text-align:center;">AT&amp;T Scenario</th>
+                            <th colspan="3" style="text-align:center;">T-Mobile Scenario</th>
+                            </tr>
+                            <tr>
+                            <th style="text-align:left;">Throughput [MBps]</th>
+                            <th>Reference</th>
+                            <th>IA-SPA</th>
+                            <th>Change (%)</th>
+                            <th>Reference</th>
+                            <th>IA-SPA</th>
+                            <th>Change (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            <td style="text-align:left;">Mean Rate</td>
+                            <td>21.17</td>
+                            <td>36.12</td>
+                            <td style="color: green; font-weight: bold;">+70.62%</td>
+                            <td>10.06</td>
+                            <td>31.72</td>
+                            <td style="color: green; font-weight: bold;">+215.49%</td>
+                            </tr>
+                            <tr>
+                            <td style="text-align:left;">Std. Deviation</td>
+                            <td>26.90</td>
+                            <td>29.61</td>
+                            <td style="color: green; font-weight: bold;">+10.09%</td>
+                            <td>20.24</td>
+                            <td>29.75</td>
+                            <td style="color: green; font-weight: bold;">+47.01%</td>
+                            </tr>
+                            <tr>
+                            <td style="text-align:left;">Max Rate</td>
+                            <td>162.00</td>
+                            <td>125.72</td>
+                            <td style="color: red; font-weight: bold;">−22.39%</td>
+                            <td>154.24</td>
+                            <td>125.72</td>
+                            <td style="color: red; font-weight: bold;">−18.49%</td>
+                            </tr>
+                            <tr>
+                            <td style="text-align:left;">Edge (5% pct.)</td>
+                            <td>3.57</td>
+                            <td>8.38</td>
+                            <td style="color: green; font-weight: bold;">+134.58%</td>
+                            <td>1.11</td>
+                            <td>9.55</td>
+                            <td style="color: green; font-weight: bold;">+758.39%</td>
+                            </tr>
+
+                            <tr>
+                            <td colspan="7" style="text-align:left; font-weight:bold; padding-top:10px;">
+                                Interference [nW]
+                            </td>
+                            </tr>
+
+                            <tr>
+                            <td style="text-align:left;">Mean Interf.</td>
+                            <td>2.24</td>
+                            <td>2.19</td>
+                            <td style="color: red; font-weight: bold;">−2.04%</td>
+                            <td>17.54</td>
+                            <td>1.11</td>
+                            <td style="color: red; font-weight: bold;">−93.70%</td>
+                            </tr>
+                            <tr>
+                            <td style="text-align:left;">Std. Deviation</td>
+                            <td>11.53</td>
+                            <td>8.58</td>
+                            <td style="color: red; font-weight: bold;">−25.57%</td>
+                            <td>216.76</td>
+                            <td>5.22</td>
+                            <td style="color: red; font-weight: bold;">−97.59%</td>
+                            </tr>
+                            <tr>
+                            <td style="text-align:left;">Max Interf.</td>
+                            <td>495.86</td>
+                            <td>473.93</td>
+                            <td style="color: red; font-weight: bold;">−4.42%</td>
+                            <td>20491.9</td>
+                            <td>214.04</td>
+                            <td style="color: red; font-weight: bold;">−98.96%</td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Geometric Visualization</h3>
+                    <h4>Visualization of acchieved Coverage in San Francisco compared to Baseline</h4>
+                    <center>
+                    <img src="images/project_Communication/DataRate_ATT_MAX.png" width="1400" alt="SF Coverage">
+                    </center>
+                    <h4>Visualization of Interference in San Francisco compared to Baseline</h4>
+                    <center>
+                    <img src="images/project_Communication/Interf_ATT_MAX.png" width="1400" alt="SF Interference">
+                    </center>
+
+                    <hr>
+
+                    <h2>5. Case Study: Florence</h2>
+                    <p>For the Florence environment, we demonstrate the algorithm's ability to handle <b>exclusionary zones</b> (historical landmarks) and its performance in a <b>continuous deployment</b> scenario. </p>
+
+                    <center>
+                        <img src="images/project_Communication/fl_map.png" class="image fit" style="max-width: 800px;" alt="3D Map of San Francisco">
+                        <p><i>High-fidelity 3D model of Florence used for ray-tracing simulations.</i></p>
+                    </center>
+
+                    <p>
+                    We consider two practical deployment scenarios. First, we introduce an <b>exclusionary zone</b>, where infrastructure placement is restricted due to historical preservation constraints. This region is illustrated as the red circle in the left image below, indicating areas where towers cannot be installed. Second, we study a <b>continuous deployment</b> setting, where the network is incrementally expanded. In this case, we assume that three towers are already deployed in the environment, shown as red points in the right image, and optimize additional placements around this existing infrastructure.
+                    </p>
+
+                    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 10px;">
+    
+                        <div style="text-align: center; width: 420px;">
+                            <div style="height: 250px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                <img src="images/project_Communication/fl_region.png"
+                                    style="height: 100%; width: 100%; object-fit: cover;"
+                                    alt="Exclusion Zone Florence">
+                            </div>
+                            <p><i>Exclusionary zone (red) where tower placement is prohibited.</i></p>
+                        </div>
+
+                        <div style="text-align: center; width: 420px;">
+                            <div style="height: 250px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                <img src="images/project_Communication/Tower_Init.png"
+                                    style="height: 100%; width: 100%; object-fit: cover;"
+                                    alt="Existing Towers Florence">
+                            </div>
+                            <p><i>Continuous deployment scenario with existing towers (red points).</i></p>
+                        </div>
+
+                    </div>
+
+                    <h3>Quantitative Performance under Constraints</h3>
+
+                    <!-- ===================== EXCLUSIONARY ZONE ===================== -->
+                    <h4>Exclusionary Zone</h4>
+
+                    <table style="border-collapse: collapse; width: 100%; font-size: 14px; margin-bottom: 30px;">
+
+                    <thead>
+                        <tr>
+                        <th style="text-align:left;">Metric</th>
+                        <th>Iliad Dataset</th>
+                        <th>IA-SPA</th>
+                        <th>Change</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                        <td colspan="4" style="font-style: italic; padding-top:10px;">Data Rate [Mbps]</td>
+                        </tr>
+
+                        <tr>
+                        <td style="text-align:left;">Mean Data Rate</td>
+                        <td>39.21</td>
+                        <td>50.96</td>
+                        <td style="color: green; font-weight: bold;">+29.98%</td>
+                        </tr>
+                        <tr>
+                        <td style="text-align:left;">Standard Deviation</td>
+                        <td>29.38</td>
+                        <td>29.28</td>
+                        <td style="color: red; font-weight: bold;">−0.33%</td>
+                        </tr>
+                        <tr>
+                        <td style="text-align:left;">Maximum Data Rate</td>
+                        <td>204.79</td>
+                        <td>207.76</td>
+                        <td style="color: green; font-weight: bold;">+1.45%</td>
+                        </tr>
+                        <tr>
+                        <td style="text-align:left;">Edge Rate (5%-tile)</td>
+                        <td>7.41</td>
+                        <td>11.53</td>
+                        <td style="color: green; font-weight: bold;">+55.62%</td>
+                        </tr>
+
+                        <tr>
+                        <td colspan="4" style="font-style: italic; padding-top:10px;">Interference [nW]</td>
+                        </tr>
+
+                        <tr>
+                        <td style="text-align:left;">Mean Interference</td>
+                        <td>8.54</td>
+                        <td>5.94</td>
+                        <td style="color: red; font-weight: bold;">−30.48%</td>
+                        </tr>
+                        <tr>
+                        <td style="text-align:left;">Standard Deviation</td>
+                        <td>18.20</td>
+                        <td>6.99</td>
+                        <td style="color: red; font-weight: bold;">−61.61%</td>
+                        </tr>
+                        <tr>
+                        <td style="text-align:left;">Maximum Interference</td>
+                        <td>499.86</td>
+                        <td>249.05</td>
+                        <td style="color: red; font-weight: bold;">−50.18%</td>
+                        </tr>
+                    </tbody>
+                    </table>
+
+                    <h5>Geometric Visualization</h5>
+
+                    <h6>Visualization of acchieved Coverage in Florence with Exclusionary Zone</h6>
+                    <center>
+                    <img src="images/project_Communication/DataRate_Iliad_Excluded.png" style="background: white; padding: 5px; display: block;" width="1400" alt="FL Coverage Exclusionary">
+                    </center>
+                    <h6>Visualization of Interference in Florence with Exclusionary Zone</h6>
+                    <center>
+                    <img src="images/project_Communication/Interf_Iliad_Excluded.png" style="background: white; padding: 5px; display: block;" width="1400" alt="FL Interference Exclusionary">
+                    </center>
+
+                    <hr>
+
+                    <!-- ===================== CONTINUOUS DEPLOYMENT ===================== -->
+                    <h4>Continuous Deployment</h4>
+
+                    <table style="border-collapse: collapse; width: 100%; font-size: 14px;">
+
+                    <thead>
+                        <tr>
+                        <th style="text-align:left;">Metric</th>
+                        <th>Iliad Dataset</th>
+                        <th>IA-SPA Optimized</th>
+                        <th>Change</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                        <td colspan="4" style="font-style: italic; padding-top:10px;">Data Rate [Mbps]</td>
+                        </tr>
+
+                        <tr>
+                        <td style="text-align:left;">Mean Data Rate</td>
+                        <td>39.15</td>
+                        <td>50.53</td>
+                        <td style="color: green; font-weight: bold;">+29.07%</td>
+                        </tr>
+                        <tr>
+                        <td style="text-align:left;">Standard Deviation</td>
+                        <td>29.23</td>
+                        <td>29.20</td>
+                        <td style="color: red; font-weight: bold;">−0.10%</td>
+                        </tr>
+                        <tr>
+                        <td style="text-align:left;">Maximum Data Rate</td>
+                        <td>204.78</td>
+                        <td>209.03</td>
+                        <td style="color: green; font-weight: bold;">+2.08%</td>
+                        </tr>
+                        <tr>
+                        <td style="text-align:left;">Edge Rate (5%-tile)</td>
+                        <td>7.43</td>
+                        <td>11.51</td>
+                        <td style="color: green; font-weight: bold;">+54.94%</td>
+                        </tr>
+
+                        <tr>
+                        <td colspan="4" style="font-style: italic; padding-top:10px;">Interference [nW]</td>
+                        </tr>
+
+                        <tr>
+                        <td style="text-align:left;">Mean Interference</td>
+                        <td>8.81</td>
+                        <td>6.16</td>
+                        <td style="color: red; font-weight: bold;">−30.12%</td>
+                        </tr>
+                        <tr>
+                        <td style="text-align:left;">Standard Deviation</td>
+                        <td>18.24</td>
+                        <td>6.67</td>
+                        <td style="color: red; font-weight: bold;">−63.42%</td>
+                        </tr>
+                        <tr>
+                        <td style="text-align:left;">Maximum Interference</td>
+                        <td>506.44</td>
+                        <td>104.86</td>
+                        <td style="color: red; font-weight: bold;">−79.29%</td>
+                        </tr>
+                    </tbody>
+                    </table>
+
+                    <h5>Geometric Visualization</h5>
+
+                    <h6>Visualization of acchieved Coverage in Florence with Exclusionary Zone</h6>
+                    <center>
+                    <img src="images/project_Communication/DataRate_Iliad_Tinit.png" width="1400" alt="FL Coverage Initial">
+                    </center>
+                    <h6>Visualization of Interference in Florence with Exclusionary Zone</h6>
+                    <center>
+                    <img src="images/project_Communication/Interf_Iliad_Tinit.png" width="1400" alt="FL Interference Initial">
+                    </center>
+
+                    <hr>
+
+                    <h2>Publications</h2>
+                    <ul>
+                        <li>
+                            Taus, L., Tsai, R., &amp; Andrews, J. G. (2025). Optimal Transmitter Placement in Realistic Urban Environments.
+                            <em>Submitted to IEEE Transactions on Wireless Communications.</em>
+                            <a href="https://arxiv.org/abs/2604.28153">[arXiv preprint]</a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+		<footer id="footer" class="wrapper alt">
+			<div class="inner"><ul class="menu"><li>&copy; Lukas Taus.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li></ul></div>
+		</footer>
+
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/main.js"></script>
+	</body>
+</html>
