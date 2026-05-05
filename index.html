@@ -246,6 +246,28 @@
 
 							<div class="features">
 								<section>
+									<h3 style="text-align: left">Optimal Transmitter Placement in Realistic Urban Environments</h3>
+									
+									<p style="font-size: 14px; margin-bottom: 0.5em;">
+										<strong>Authors:</strong> Lukas Taus, Richard Tsai, Jeffrey G. Andrews
+									</p>
+									<p style="font-size: 13px; color: #888; margin-bottom: 1.5em;">
+										<i>Preprint &bull; April 2026</i>
+									</p>
+
+									<p>
+										In a wireless network, the spatial location of the transmitters has a large impact on the achievable rate at each user location. The optimal placement of -- for example -- cellular base stations is a difficult non-convex problem, and is usually addressed with simplified propagation models and simplified heuristics that may account for specifics such as the site topology, building locations, and user density. We propose a mathematically rigorous framework for optimal transmitter placement that explicitly integrates detailed site-specific maps, spatial material properties, and realistic signal attenuation. We introduce a novel aggregated network quality functional which captures the essential trade-off between maximizing network coverage and minimizing cost, and establish the problem's sub-modularity under certain practical conditions. To solve the resulting resource-constrained optimization problem for sparse, discrete transmitter configurations, we propose the Interference-Aware Submodular Placement Algorithm (IA-SPA) and prove theoretical performance guarantees on its gap from optimality. IA-SPA is general and can incorporate existing BS locations and prohibited areas (e.g. a lake), making it useful for either clean-slate or incremental deployments. We show the utility of our approach using a ray tracing-based simulation framework applied to 3D maps of San Francisco and Florence, where we compare to known base station deployments by AT&T, T-Mobile and Iliad. We demonstrate that our proposed placement strategy achieves significant increases in mean data rate (about 2x) and edge rate (2-8x) compared to existing tower deployments, using the same number of transmitters. 
+									</p>
+
+									<ul class="actions">
+										<li><a href="https://arxiv.org/abs/2604.28153" class="button">View Paper</a></li>
+										<li><a href="project_Communication.html" class="button primary">Project Page</a></li>
+									</ul>
+								</section>
+							</div>
+
+							<div class="features">
+								<section>
 									<h3 style="text-align: left">Rendezvous Planning from Sparse Observations of Optimally Controlled Targets</h3>
 									
 									<p style="font-size: 14px; margin-bottom: 0.5em;">
@@ -335,9 +357,17 @@
 							<h3>Presentations</h3>
 							<div class="features">
 								<section>
+								<h3 style='text-align: left'>Poster Presentation at the 6G@UT Forum 2026<span style="float:right;">Austin, US</span></h3>
+								<p style="font-size: 13px">April 2026</p>
+								<p>Presented our framework for optimal wireless transmitter placement in realistic 3D urban environments. Introduced IA-SPA, a provably near-optimal algorithm that couples physics-accurate ray tracing with submodular optimization theory to solve a challenging non-convex resource allocation problem. Demonstrated significant performance gains over existing real-world carrier deployments by AT&amp;T, T-Mobile, and Iliad in high-fidelity simulations of San Francisco and Florence, achieving roughly 2× improvements in mean data rate and up to 8× in edge-user rate using the same number of transmitters.</p>
+								</section>
+							</div>
+
+							<div class="features">
+								<section>
 								<h3 style='text-align: left'>Poster Presentation at CAMDA<span style="float:right;">College Station, US</span></h3>
 								<p style="font-size: 13px">May 2023</p>
-								<p>Presented recent results about efficient and robust sensor placement in complex environments at the Center for Approximation and Mathematical Data Analytics.</p>
+								<p>Presented work on provably near-optimal sensor network design in complex, non-convex environments. Introduced a novel multi-coverage objective for greedy placement algorithms with theoretical optimality guarantees, and showed how the geometric structure of training data critically governs the performance of a deep learning model that accelerates the algorithm to near real-time speed.</p>
 								</section>
 							</div>
 						</div>
